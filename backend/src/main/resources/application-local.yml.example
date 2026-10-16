@@ -1,0 +1,20 @@
+# ============================================================
+#  application-local.yml 模板
+#  用法：复制本文件为 application-local.yml 并填入真实值，
+#        该文件已被 .gitignore 忽略，不会被提交到仓库。
+# ============================================================
+
+spring:
+  datasource:
+    username: root
+    password: 你的MySQL密码
+
+energy:
+  jwt:
+    # 生产环境请更换为随机长字符串，例如 openssl rand -hex 32
+    secret: 请替换为随机密钥
+  weather:
+    # 和风天气「个人专属 API Host」（登录 console.qweather.com -> 设置）
+    api-host: https://你的专属host.qweatherapi.com
+    # 和风天气 API Key
+    api-key: 你的和风天气APIKey

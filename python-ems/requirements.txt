@@ -1,0 +1,19 @@
+# ===== 阶段1：预测（SARIMA + ARCH）=====
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+statsmodels>=0.14
+arch>=6.3
+fastapi>=0.110
+uvicorn[standard]>=0.27
+matplotlib>=3.7
+
+# ===== 阶段3：D-Vine Copula =====
+pyvinecopulib>=0.7
+
+# ===== 阶段4：DRO 优化 =====
+cvxpy>=1.5
+
+# ===== 阶段1.5：天气接口（后续接入）=====
+# requests
+python-dotenv>=1.0   # 读取 .env 中的敏感配置（天气 API Key 等）

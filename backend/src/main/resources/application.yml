@@ -1,0 +1,88 @@
+server:
+  port: 8082
+
+spring:
+  # 本地敏感配置（数据库密码/JWT密钥/天气密钥）放在 application-local.yml，
+  # 该文件已被 .gitignore 忽略。optional: 前缀表示文件不存在时也能正常启动。
+  config:
+    import: optional:classpath:application-local.yml
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/energy_monitor?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    # 可通过环境变量或 application-local.yml 覆盖
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  # 定时任务线程池：串口热插拔巡检(识别可能耗时数秒)与数据采集并行，避免相互阻塞
+  task:
+    scheduling:
+      pool:
+        size: 4
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+# 自定义配置
+energy:
+  jwt:
+    # 密钥：请通过环境变量 JWT_SECRET 或 application-local.yml 提供，生产环境务必更换
+    secret: ${JWT_SECRET:change-me-in-production}
+    # 过期时间（小时）
+    expire-hours: 24
+  # 数据模拟间隔（毫秒）
+  simulate-interval-ms: 3000
+  # 调度引擎决策间隔（毫秒）
+  dispatch-interval-ms: 10000
+  # 启动时自动生成的历史数据天数（往前推），0 表示不生成；生成后重复启动会自动跳过
+  history-days: 7
+  # 天气（和风天气，用于大屏"定位 + 实时气象"）
+  weather:
+    # 和风天气 API Host：个人专属 Host 请通过环境变量 WEATHER_API_HOST 或 application-local.yml 提供
+    api-host: ${WEATHER_API_HOST:https://devapi.qweather.com}
+    # 和风天气 API Key：请通过环境变量 WEATHER_API_KEY 或 application-local.yml 提供，切勿提交到仓库
+    api-key: ${WEATHER_API_KEY:}
+    latitude: 39.92      # 备用坐标（IP 自动定位失败时使用）
+    longitude: 116.41
+    use-ip-location: true   # true: 启动时按运行机器公网 IP 自动定位
+    cache-seconds: 600   # 天气数据缓存秒数，避免频繁调用
+  # Python 预测/调度服务（DRO 计划）
+  python:
+    base-url: http://localhost:8000
+  # DRO 计划刷新间隔（毫秒）
+  dro-refresh-ms: 300000
+  # 储能安全检测模块
+  safety:
+    # 采集模式: simulate 模拟 / real 真串口(USB转RS485)
+    mode: real
+    # 真实串口配置（mode=real 时生效）；本机 USB-SERIAL CH340 枚举为 COM5，切勿与 UartAssist 同时打开
+    serial-port: COM5
+    serial-baud-rate: 4800
+    # 采集数据间隔（毫秒）
+    collect-interval-ms: 2000
+    # ---- 温湿度变送器寄存器块（说明书：0x0000 湿度 / 0x0001 温度，16bit 大端，值×0.1） ----
+    register-start: 0
+    register-count: 2
+    # ---- 串口识别 ----
+    # "识别" 时依次尝试的候选波特率（说明书默认 4800）
+    identify-baud-rates: 4800,9600,19200,38400
+    # "识别" 时依次尝试的候选从站地址（出厂默认 1）
+    identify-slave-addresses: 1,2,3,4
+    # 串口读超时（毫秒）
+    serial-read-timeout-ms: 400
+    # 同一次块读结果的短缓存（毫秒）：温度/湿度两条设备共用一次串口事务
+    frame-cache-ms: 500
+    # ---- 热插拔 ----
+    # 巡检间隔：检测端口拔出与重新接入（毫秒）
+    watch-interval-ms: 3000
+    # 采集连续失败多少次判定离线并停止采集
+    offline-threshold: 3
+    # 端口在线但识别失败后的重试间隔（毫秒），避免空转占用 485 总线
+    offline-recheck-ms: 10000
+

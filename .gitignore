@@ -1,0 +1,46 @@
+# ============================================================
+#  光储智慧调度监控平台 - Git 忽略规则
+#  公开仓库：只提交源码，忽略依赖/构建产物/论文材料/敏感配置
+# ============================================================
+
+# ---------- 敏感信息（严禁提交）----------
+backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-local.yaml
+python-ems/.env
+*.env
+*.env.local
+
+# ---------- 论文 / 参考材料（二进制大文件）----------
+*.docx
+*.doc
+*.pdf
+模板/
+论文生成/
+
+# ---------- 依赖包 / 构建产物 ----------
+# 前端
+frontend/node_modules/
+frontend/dist/
+# 后端
+backend/target/
+*.class
+*.jar
+*.war
+# Python
+**/__pycache__/
+*.py[cod]
+# 通用
+*.log
+
+# ---------- IDE / 编辑器个人配置 ----------
+.idea/
+.vscode/
+.github/modernize/
+
+# ---------- 运行生成物 / 临时文件 ----------
+python-ems/dispatch_plan.png
+python-ems/forecast_pv.png
+
+# ---------- Node 锁文件（本项目不用 Node 根工程，误生成的忽略）----------
+/package-lock.json
+python-ems/package-lock.json

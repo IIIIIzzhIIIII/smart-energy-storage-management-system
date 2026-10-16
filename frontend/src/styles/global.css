@@ -1,0 +1,119 @@
+/* ===== 全局科技风主题 ===== */
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+body {
+  background-color: #070b18;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.035) 1px, transparent 1px),
+    radial-gradient(1400px 700px at 15% -10%, rgba(0, 170, 255, 0.12), transparent 60%),
+    radial-gradient(1200px 600px at 100% 0%, rgba(0, 229, 255, 0.10), transparent 60%),
+    linear-gradient(180deg, #070b18 0%, #0b1122 100%);
+  background-size: 40px 40px, 40px 40px, auto, auto, auto;
+  background-attachment: fixed;
+}
+
+/* Element Plus 深色科技主题变量覆盖 */
+html.dark {
+  --el-color-primary: #00b4d8;
+  --el-color-primary-light-3: #33c5e2;
+  --el-color-primary-light-5: #66d6ec;
+  --el-color-primary-light-7: #99e6f3;
+  --el-color-primary-light-8: #b3edf7;
+  --el-color-primary-light-9: #ccf4fb;
+  --el-color-primary-dark-2: #0090ad;
+
+  --el-bg-color: #0b1122;
+  --el-bg-color-overlay: #111a30;
+  --el-fill-color-blank: #0f1628;
+  --el-fill-color: #1a2238;
+  --el-fill-color-light: #202a42;
+  --el-border-color: #2a3550;
+  --el-border-color-light: #24304a;
+  --el-border-color-lighter: #1c2740;
+  --el-text-color-primary: #d8dee9;
+  --el-text-color-regular: #aab4c8;
+  --el-text-color-secondary: #7a879e;
+  --el-mask-color: rgba(4, 8, 18, 0.85);
+}
+
+/* el-card 科技发光卡片 */
+.el-card {
+  background: linear-gradient(180deg, rgba(26, 31, 54, 0.9), rgba(15, 20, 40, 0.9));
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  box-shadow: 0 0 16px rgba(0, 180, 255, 0.10);
+  border-radius: 8px;
+}
+.el-card.is-hover-shadow:hover,
+.el-card.is-always-shadow {
+  box-shadow: 0 0 22px rgba(0, 229, 255, 0.22);
+}
+
+/* 表格暗色 */
+.el-table {
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-header-bg-color: rgba(0, 229, 255, 0.06);
+  --el-table-row-hover-bg-color: rgba(0, 229, 255, 0.06);
+  --el-table-border-color: rgba(0, 229, 255, 0.12);
+  --el-table-header-text-color: #7fd8f0;
+  --el-table-text-color: #c9d6e8;
+}
+
+/* 菜单暗色 hover */
+.el-menu-item:hover,
+.el-sub-menu__title:hover {
+  background-color: rgba(0, 229, 255, 0.08) !important;
+}
+
+/* 页面容器与标题 */
+.page-container {
+  padding: 16px;
+}
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #d8dee9;
+  letter-spacing: 1px;
+  padding-left: 12px;
+  position: relative;
+}
+.page-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 18px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #00e5ff, #0077ff);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 滚动条科技化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 229, 255, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 229, 255, 0.5);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
