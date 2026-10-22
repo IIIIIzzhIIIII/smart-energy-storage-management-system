@@ -20,7 +20,7 @@ namespace EnergyMonitorLauncher
             {
                 if (!createdNew)
                 {
-                    MessageBox.Show("光储智慧调度监控平台已经在运行。", "提示",
+                    MessageBox.Show("光储智慧能源管理平台已经在运行。", "提示",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -55,7 +55,7 @@ namespace EnergyMonitorLauncher
         public LauncherForm()
         {
             baseDir = AppDomain.CurrentDomain.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
-            Text = "光储智慧调度监控平台";
+            Text = "光储智慧能源管理平台";
             StartPosition = FormStartPosition.CenterScreen;
             ClientSize = new Size(560, 310);
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -65,7 +65,7 @@ namespace EnergyMonitorLauncher
 
             var title = new Label
             {
-                Text = "光储智慧调度监控平台",
+                Text = "光储智慧能源管理平台",
                 Font = new Font("Microsoft YaHei UI", 16F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(30, 90, 160),
                 AutoSize = true,

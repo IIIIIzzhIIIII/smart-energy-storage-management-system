@@ -16,7 +16,7 @@ public class MybatisPlusConfig {
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        // 开发环境 MySQL，一键运行版 H2；分页方言必须与驱动一致
+        // 开发环境使用 MySQL，桌面发行版使用 H2；分页方言必须与驱动一致
         DbType dbType = driverClassName != null && driverClassName.toLowerCase().contains("h2")
                 ? DbType.H2 : DbType.MYSQL;
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(dbType));

@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 
 /**
- * 一键运行版首次启动写入演示数据：
+ * 桌面发行版首次启动写入初始数据：
  *   建表由 application-release.yml 的 spring.sql.init 在 Bean 初始化前完成；
  *   本类在启动完成后检查 sys_user 是否为空，为空才写入 h2-data.sql。
  * 这样既避免定时任务在建表前查询报错，也保证重启后历史数据仍在。

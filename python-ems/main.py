@@ -1,5 +1,5 @@
 """
-FastAPI 入口：预测大脑服务（端口 8000）。
+FastAPI 入口：预测与调度服务（端口 8000）。
 
 启动方式（在 python-ems 目录下）：
     python main.py
@@ -13,8 +13,8 @@ from fastapi import FastAPI
 from api.routes import router
 
 app = FastAPI(
-    title="光储智慧调度 - 预测大脑",
-    description="SARIMA+ARCH 预测 / D-Vine Copula / DRO 调度（逐步接入）",
+    title="光储智慧能源管理平台 - 预测与调度服务",
+    description="SARIMA+ARCH 预测、D-Vine Copula 场景生成与 DRO 鲁棒调度",
     version="0.1.0",
 )
 

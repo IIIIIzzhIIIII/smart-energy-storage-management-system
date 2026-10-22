@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
- * 调度引擎（规则式，阶段2）：
+ * 规则式调度引擎：
  * 读取当前状态（光伏/负荷/SOC）-> 判断峰平谷时段 -> 匹配启用策略 -> 计算 PCS 目标功率。
  *
  * 目前实现两种策略：

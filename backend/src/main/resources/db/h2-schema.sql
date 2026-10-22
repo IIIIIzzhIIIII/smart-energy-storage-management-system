@@ -1,5 +1,5 @@
 -- ============================================================
--- 一键运行版 H2 建表脚本（由 MySQL init.sql 转换）
+-- 桌面发行版 H2 建表脚本（由 MySQL init.sql 转换）
 -- 约定：
 --   * 不写 ENGINE / CHARSET / COMMENT 等 MySQL 专属语法
 --   * 自增统一使用 AUTO_INCREMENT（H2 MODE=MySQL 支持）

@@ -48,7 +48,7 @@
 
     <el-container>
       <el-header class="header">
-        <div class="header-title">{{ $route.meta.title || '光储智慧调度监控平台' }}</div>
+        <div class="header-title">{{ $route.meta.title || '光储智慧能源管理平台' }}</div>
         <div class="header-user">
           <el-tag size="small" :type="tagType">{{ roleText }}</el-tag>
           <el-dropdown @command="handleCommand">

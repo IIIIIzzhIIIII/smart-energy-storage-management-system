@@ -1,5 +1,5 @@
 """
-阶段3+4 联合演示：预测 -> D-Vine Copula 场景生成 -> DRO 鲁棒调度 -> 与确定性调度对比。
+预测、D-Vine Copula 场景生成与 DRO 调度对比示例。
 
 用法（在 python-ems 目录下）：
     python demo_dispatch.py

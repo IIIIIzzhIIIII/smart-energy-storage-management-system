@@ -1,5 +1,5 @@
 -- ============================================================
--- 一键运行版 H2 初始数据（MySQL init.sql + safety_update.sql 的最终状态）
+-- 桌面发行版 H2 初始数据（MySQL init.sql + safety_update.sql 的最终状态）
 -- 所有账号密码均为 123456
 -- ============================================================
 
@@ -9,7 +9,7 @@ INSERT INTO sys_user (username, password, nickname, role, status) VALUES
 ('user',       'e10adc3949ba59abbe56e057f20f883e', '场站用户',   'USER',       1),
 ('viewer',     'e10adc3949ba59abbe56e057f20f883e', '只读访客',   'VIEWER',     1);
 
--- 演示设备（归属 user 用户, id=3；SAFETY 模块 id=7）
+-- 示例设备（归属 user 用户, id=3；SAFETY 模块 id=7）
 INSERT INTO device (device_code, device_name, device_type, model, rated_power, capacity, comm_protocol, comm_address, owner_id, status) VALUES
 ('PV-001',     '光伏逆变器1号',       'PV',     'SG-50KTL',       50,   0,   'MODBUS_TCP', '192.168.1.101', 3, 1),
 ('PCS-001',    '储能变流器1号',       'PCS',    'ES-100kW',       100,  200, 'MODBUS_TCP', '192.168.1.102', 3, 1),
@@ -19,14 +19,14 @@ INSERT INTO device (device_code, device_name, device_type, model, rated_power, c
 ('EV-001',     '充电桩1号',           'EV',     'DC-60kW',        60,   0,   'MODBUS_TCP', '192.168.1.106', 3, 1),
 ('SAFETY-001', '储能电池安全检测模块', 'SAFETY', 'BMS-SAFETY-24P', 0,    0,   'MODBUS_RTU', 'COM5',          3, 1);
 
--- 演示告警规则
+-- 示例告警规则
 INSERT INTO alarm_rule (device_id, metric, min_value, max_value, level, enabled, owner_id) VALUES
 (2, 'SOC',     20,  90,   'WARN',     1, 3),
 (2, 'POWER',  -90,  90,   'WARN',     1, 3),
 (4, 'POWER',   0,   450,  'WARN',     1, 3),
 (1, 'VOLTAGE', 380, 460,  'CRITICAL', 1, 3);
 
--- 演示调度策略
+-- 示例调度策略
 INSERT INTO strategy (name, strategy_type, device_id, params, priority, enabled, owner_id) VALUES
 ('峰谷套利-默认', 'PEAK_VALLEY', 2, '{"peakCharge":0.95,"valleyCharge":0.35,"peakDischarge":true,"timeWindow":"19:00-22:00"}', 10, 1, 3),
 ('自发自用-默认', 'SELF_USE',    2, '{"reserveSoc":30}', 8, 1, 3),

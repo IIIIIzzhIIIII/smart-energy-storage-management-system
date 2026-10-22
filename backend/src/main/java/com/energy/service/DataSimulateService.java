@@ -49,7 +49,7 @@ public class DataSimulateService {
     private final Map<LocalDate, DayProfile> profileCache = new ConcurrentHashMap<>();
 
     /**
-     * 定时生成模拟数据（定时任务，论文中预留 Modbus TCP 扩展采集真实数据）
+     * 定时生成模拟数据（保留 Modbus TCP 扩展点，用于接入真实采集设备）
      */
     @Scheduled(fixedDelayString = "${energy.simulate-interval-ms}")
     public void generate() {

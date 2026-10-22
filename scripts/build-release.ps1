@@ -1,5 +1,5 @@
 ﻿# ============================================================
-# 一键运行版构建脚本（Plan C）
+# Windows 桌面发行版构建脚本
 #   Windows x64 + 内置 JRE(jlink) + H2 + PyInstaller Python 服务
 #
 # 用法（在仓库根目录执行）：
@@ -7,11 +7,11 @@
 #   powershell -ExecutionPolicy Bypass -File scripts\build-release.ps1 -SkipPython
 #
 # 产物：
-#   dist\EnergyMonitor-v1.1.0-win64.zip
-#   dist\EnergyMonitor-v1.1.0-win64.zip.sha256
+#   dist\EnergyMonitor-v1.1.1-win64.zip
+#   dist\EnergyMonitor-v1.1.1-win64.zip.sha256
 # ============================================================
 param(
-    [string]$Version = "1.1.0",
+    [string]$Version = "1.1.1",
     [string]$PythonExe = "",
     [switch]$SkipPython,
     [switch]$SkipFrontend
@@ -146,8 +146,8 @@ foreach ($dir in @("app", "python", "data", "logs", "docs")) {
 
 Copy-Item $Jar (Join-Path $Stage "app\energy-monitor.jar") -Force
 Copy-Item (Join-Path $Root "README.md") (Join-Path $Stage "README.md") -Force -ErrorAction SilentlyContinue
-Copy-Item (Join-Path $Root "docs\一键运行版使用说明.md") (Join-Path $Stage "使用说明.md") -Force -ErrorAction SilentlyContinue
-Copy-Item (Join-Path $Root "docs\一键运行版使用说明.md") (Join-Path $Stage "docs\一键运行版使用说明.md") -Force -ErrorAction SilentlyContinue
+Copy-Item (Join-Path $Root "docs\桌面版使用说明.md") (Join-Path $Stage "使用说明.md") -Force
+Copy-Item (Join-Path $Root "docs\桌面版使用说明.md") (Join-Path $Stage "docs\桌面版使用说明.md") -Force
 
 if (-not $SkipPython) {
     $PyDist = Join-Path $Root "python-ems\dist\python-ems"
@@ -179,7 +179,7 @@ if ($LASTEXITCODE -ne 0) { throw "启动器编译失败" }
 @"
 此目录用于保存 H2 数据库（energy_monitor.mv.db）。
 迁移系统时，请整体复制 data 目录。
-首次启动会自动建库并生成演示数据。
+首次启动会自动建库并生成示例数据。
 "@ | Set-Content (Join-Path $Stage "data\说明.txt") -Encoding UTF8
 @"
 运行日志：
@@ -209,6 +209,18 @@ for ($i = 1; $i -le 3; $i++) {
     }
 }
 if (-not $zipped) { throw "压缩失败" }
+
+$zipCheck = [System.IO.Compression.ZipFile]::OpenRead($zip)
+try {
+    $rootLauncher = $zipCheck.Entries | Where-Object { $_.FullName -eq "EnergyMonitor.exe" }
+    if (-not $rootLauncher) {
+        throw "发行包根目录缺少 EnergyMonitor.exe，请检查启动器输出路径。"
+    }
+} finally {
+    $zipCheck.Dispose()
+}
+Write-Host "已校验：EnergyMonitor.exe 位于压缩包根目录"
+
 $hash = (Get-FileHash $zip -Algorithm SHA256).Hash
 "$hash  $(Split-Path -Leaf $zip)" | Set-Content ($zip + ".sha256") -Encoding ASCII
 

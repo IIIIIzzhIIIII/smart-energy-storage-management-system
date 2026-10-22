@@ -3,7 +3,7 @@
     <div class="login-box">
       <div class="login-title">
         <div class="logo-emblem">⚡</div>
-        <h2>光储智慧调度监控平台</h2>
+        <h2>光储智慧能源管理平台</h2>
         <p>基于 Spring Boot 的智慧能源管理系统</p>
       </div>
       <el-form :model="form" :rules="rules" ref="formRef" @keyup.enter="handleLogin">

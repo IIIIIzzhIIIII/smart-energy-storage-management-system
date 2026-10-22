@@ -1,23 +1,23 @@
-# python-ems —— 光储智慧调度「预测大脑」
+# python-ems — 预测与调度服务
 
 独立 Python 服务，与 Java 后端（端口 8082）通过 HTTP 协作，负责：
 
-- **阶段1**：SARIMA + ARCH 预测（光伏/负荷/电价）
-- **阶段3**：D-Vine Copula 场景生成
-- **阶段4**：分布鲁棒优化（DRO）调度
+- **功率预测**：SARIMA + ARCH（光伏、负荷、电价）
+- **场景生成**：D-Vine Copula 联合建模
+- **优化调度**：分布鲁棒优化（DRO）
 
 ## 目录结构
 
 ```
 python-ems/
 ├── main.py              # FastAPI 入口（端口 8000）
-├── demo.py              # 阶段1演示（预测出图）
-├── demo_dispatch.py     # 阶段3+4演示（Copula场景 + DRO调度对比）
+├── demo.py              # 预测示例（输出图表）
+├── demo_dispatch.py     # 调度示例（Copula 场景 + DRO 对比）
 ├── config.py            # 数据源切换 + 模型参数 + 天气配置
 ├── requirements.txt
 ├── data/
 │   ├── synthetic.py     # 合成数据生成器
-│   └── loader.py        # 统一加载（合成/公开CSV 一键切换）
+│   └── loader.py        # 统一加载（合成数据 / 公开 CSV）
 ├── forecast/
 │   └── sarima_arch.py   # SARIMA + ARCH/GARCH（预测均值 + 波动率）
 ├── copula/
@@ -38,12 +38,12 @@ pip install -r requirements.txt
 
 ## 运行
 
-**阶段1 预测演示：**
+**预测示例：**
 ```bash
 python demo.py          # 出 forecast_pv.png
 ```
 
-**阶段3+4 调度演示（预测 -> Copula -> DRO）：**
+**调度示例（预测 → Copula → DRO）：**
 ```bash
 python demo_dispatch.py # 出 dispatch_plan.png，打印确定性 vs 鲁棒调度对比
 ```

@@ -1,5 +1,5 @@
 """
-统一数据加载器：合成数据 / 公开数据集 一键切换。
+统一数据加载器：支持合成数据与公开数据集切换。
 
 无论数据来自哪里，最终都归一化成统一 schema：
     timestamp | pv_power_kw | load_power_kw | price_yuan_kwh

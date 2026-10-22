@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 一键运行版健康检查：启动器用它判断后端是否已经就绪。
+ * 服务健康检查：桌面启动器用它判断后端是否已经就绪。
  * 该接口不需要登录，已在 WebConfig 中排除 JWT 拦截。
  */
 @RestController
