@@ -37,6 +37,21 @@ backend/target/
 .vscode/
 .github/modernize/
 
+# ---------- 构建工具 / 一键运行版产物 ----------
+.tools/
+/dist/
+/build/
+launcher/bin/
+launcher/obj/
+python-ems/build/
+python-ems/dist/
+*.exe
+*.zip
+*.sha256
+*.db
+/data/
+/logs/
+
 # ---------- 运行生成物 / 临时文件 ----------
 python-ems/dispatch_plan.png
 python-ems/forecast_pv.png

@@ -1,6 +1,7 @@
 package com.energy.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.energy.dto.DeviceDataStat;
 import com.energy.entity.DeviceData;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -53,8 +54,8 @@ public interface DeviceDataMapper extends BaseMapper<DeviceData> {
      * 历史数据为 1 分钟/条，实时数据为 simulate-interval-ms（默认 3 秒/条），
      * 按实际间隔折算电量才能得到正确的 kWh，避免两种粒度混算导致数量级错误。
      */
-    @Select("SELECT COALESCE(TIMESTAMPDIFF(SECOND, MIN(ts), MAX(ts)) / GREATEST(COUNT(*) - 1, 1), 0) FROM device_data WHERE device_id = #{deviceId} AND ts BETWEEN #{start} AND #{end}")
-    Double avgIntervalSeconds(@Param("deviceId") Long deviceId,
+    @Select("SELECT MIN(ts) AS minTs, MAX(ts) AS maxTs, COUNT(*) AS cnt FROM device_data WHERE device_id = #{deviceId} AND ts BETWEEN #{start} AND #{end}")
+    DeviceDataStat sampleStat(@Param("deviceId") Long deviceId,
                               @Param("start") LocalDateTime start,
                               @Param("end") LocalDateTime end);
 }

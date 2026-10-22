@@ -7,7 +7,7 @@
 | 层级 | 技术 |
 |------|------|
 | 后端 | Java 17 + Spring Boot 2.7 + MyBatis-Plus + WebSocket + Spring Task + JWT |
-| 数据库 | MySQL 8.0（时序数据暂存 MySQL，预留 InfluxDB 扩展） |
+| 数据库 | MySQL 8.0（开发环境）/ H2 文件库（一键运行版内置） |
 | 前端 | Vue 3 + Element Plus + ECharts + Axios + Pinia + Vite |
 | 数据模拟 | 自编数据生成器（@Scheduled 定时生成，论文预留 Modbus TCP 扩展） |
 
@@ -20,34 +20,58 @@
 5. **实时监控**：大屏卡片 + 实时功率曲线 + 历史数据查询
 6. **调度策略**：计划曲线、削峰填谷、自发自用、需量控制 + 优先级
 7. **光储充一体化**：充电桩调度（谷时充电/峰时避峰/光伏余电充电）+ 充电订单
-7. **告警管理**：阈值规则、越限检测、WebSocket 推送、处理
-8. **能量流可视化**：桑基图展示光伏/储能/负载/电网能量流向
-9. **统计报表**：发电/用电/充放电/收益，日/月报表（峰平谷电价）
+8. **告警管理**：阈值规则、越限检测、WebSocket 推送、处理
+9. **能量流可视化**：桑基图展示光伏/储能/负载/电网能量流向
+10. **统计报表**：发电/用电/充放电/收益，日/月报表（峰平谷电价）
 
 ## 目录结构
 
 ```
 毕业设计/
-├── backend/          # Spring Boot 后端工程
+├── backend/          # Spring Boot 后端工程（MySQL / H2 双数据库）
 │   ├── pom.xml
-│   ├── sql/init.sql  # 数据库初始化脚本
-│   └── src/main/java/com/energy/
-│       ├── config/       # 配置（JWT拦截器/CORS/MyBatis-Plus/WebSocket）
-│       ├── controller/   # 控制器
-│       ├── service/      # 业务逻辑（含数据模拟/告警/报表）
-│       ├── entity/       # 实体
-│       ├── mapper/       # MyBatis-Plus Mapper
-│       ├── context/      # 用户上下文/权限工具
-│       └── util/         # JWT/MD5 工具
-└── frontend/         # Vue 3 前端工程
-    ├── vite.config.js
-    └── src/
-        ├── layout/       # 布局（侧边栏/顶栏/WebSocket）
-        ├── views/        # 页面
-        ├── router/       # 路由
-        ├── store/        # Pinia
-        └── utils/        # Axios 封装
+│   ├── sql/init.sql  # MySQL 开发环境初始化脚本
+│   └── src/main/
+│       ├── java/com/energy/
+│       │   ├── config/       # 配置（JWT/CORS/MyBatis-Plus/WebSocket/发布初始化）
+│       │   ├── controller/   # 控制器（含健康检查、SPA 路由）
+│       │   ├── service/      # 业务逻辑（含数据模拟/告警/报表）
+│       │   ├── entity/       # 实体
+│       │   ├── mapper/       # MyBatis-Plus Mapper
+│       │   ├── context/      # 用户上下文/权限工具
+│       │   └── util/         # JWT/MD5 工具
+│       └── resources/
+│           ├── application.yml           # 开发环境（MySQL）
+│           ├── application-release.yml   # 一键运行版（H2 + 单端口）
+│           └── db/h2-*.sql               # H2 建表与种子数据
+├── frontend/         # Vue 3 前端工程
+│   ├── vite.config.js
+│   └── src/
+│       ├── layout/       # 布局（侧边栏/顶栏/WebSocket）
+│       ├── views/        # 页面
+│       ├── router/       # 路由
+│       ├── store/        # Pinia
+│       └── utils/        # Axios 封装
+├── python-ems/       # FastAPI 预测/DRO 服务
+│   ├── server_entry.py   # PyInstaller 冻结入口
+│   └── python-ems.spec   # 打包配置
+├── launcher/         # C# WinForms 启动器源码
+├── scripts/          # 一键构建脚本
+└── docs/             # 部署 / 构建 / 使用文档
 ```
+
+## 一键运行版（答辩演示推荐）
+
+不安装 Java / MySQL / Node / Python，解压后双击 `EnergyMonitor.exe` 即可：
+内置精简 JRE、H2 文件数据库、已打包的 Vue 前端，以及 PyInstaller 冻结的 Python 预测服务。
+
+1. 打开 [Releases](https://github.com/IIIIIzzhIIIII/smart-energy-storage-management-system/releases/latest)；
+2. 下载 `EnergyMonitor-v1.1.0-win64.zip`（完整版）并解压到**不含中文和空格**的目录；
+3. 双击 `EnergyMonitor.exe`，等待浏览器自动打开 `http://127.0.0.1:8082`；
+4. 使用 `admin / 123456` 登录。
+
+> 详细说明见 [一键运行版使用说明](docs/一键运行版使用说明.md)，
+> 自行构建见 [一键运行版构建](docs/一键运行版构建.md)。
 
 ## 内置账号
 
@@ -94,8 +118,9 @@ npm run dev
 
 ## 端口
 
-- 后端：8082
-- 前端：5173（开发）
+- 后端：8082（一键运行版只需这一个端口，前端静态页面由后端直接提供）
+- 前端：5173（仅开发模式）
+- Python 预测服务：8000（仅本机 127.0.0.1 监听）
 
 ## 数据权限说明
 

@@ -3,6 +3,7 @@ package com.energy.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.energy.context.PermissionUtil;
 import com.energy.context.UserContext;
+import com.energy.dto.DeviceDataStat;
 import com.energy.entity.Device;
 import com.energy.mapper.DeviceDataMapper;
 import com.energy.mapper.DeviceMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -88,9 +90,16 @@ public class ReportService {
             double p = pos == null ? 0 : pos;
             double n = neg == null ? 0 : neg;
             // 按该设备在本时段的实际采样间隔折算电量(kWh)，兼容历史(1分钟/条)与实时(秒级)两种粒度
-            Double sampleSec = deviceDataMapper.avgIntervalSeconds(device.getId(), start, end);
-            double intervalHours = (sampleSec == null || sampleSec <= 0)
-                    ? intervalMs / 3600000.0 : sampleSec / 3600.0;
+            DeviceDataStat stat = deviceDataMapper.sampleStat(device.getId(), start, end);
+            double intervalHours;
+            if (stat == null || stat.getCnt() == null || stat.getCnt() < 2
+                    || stat.getMinTs() == null || stat.getMaxTs() == null) {
+                intervalHours = intervalMs / 3600000.0;
+            } else {
+                double avgSeconds = Duration.between(stat.getMinTs(), stat.getMaxTs()).getSeconds()
+                        / (double) (stat.getCnt() - 1);
+                intervalHours = avgSeconds <= 0 ? intervalMs / 3600000.0 : avgSeconds / 3600.0;
+            }
             double pEnergy = p * intervalHours;
             double nEnergy = n * intervalHours;
             switch (device.getDeviceType()) {

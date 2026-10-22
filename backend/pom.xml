@@ -51,6 +51,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- 一键运行版内置数据库：release profile 使用 H2 文件库，用户无需安装 MySQL -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

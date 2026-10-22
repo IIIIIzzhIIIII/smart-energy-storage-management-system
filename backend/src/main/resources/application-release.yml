@@ -1,0 +1,92 @@
+# ============================================================
+# 一键运行版（release）配置
+# 特点：
+#   - 内置 H2 文件数据库，用户无需安装 MySQL
+#   - 前端已打包进 jar 的 static 目录，只需要 8082 一个端口
+#   - 安全检测默认走模拟模式，没有串口设备也能完整演示
+# 启动：java -jar energy-monitor.jar --spring.profiles.active=release
+# 数据目录：运行目录下 data/（迁移时整个目录复制即可）
+# ============================================================
+server:
+  port: 8082
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    # VALUE/CURRENT/USER 是 H2 关键字，但本项目用作列名/表名，需显式放行
+    url: jdbc:h2:file:./data/energy_monitor;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;NON_KEYWORDS=VALUE,CURRENT,USER;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ""
+  # 建表在 Bean 初始化 / 定时任务启动之前完成；脚本全部为 IF NOT EXISTS，可重复执行
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/h2-schema.sql
+      continue-on-error: false
+  h2:
+    console:
+      enabled: false
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  task:
+    scheduling:
+      pool:
+        size: 4
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    # 发布版关闭 SQL 控制台日志，避免日志文件过大
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+energy:
+  jwt:
+    secret: ${JWT_SECRET:energy-monitor-release-local-secret-please-change}
+    expire-hours: 24
+  simulate-interval-ms: 3000
+  dispatch-interval-ms: 10000
+  # 首次启动生成 3 天历史数据；已有历史数据会自动跳过
+  history-days: 3
+  weather:
+    api-host: ${WEATHER_API_HOST:https://devapi.qweather.com}
+    api-key: ${WEATHER_API_KEY:}
+    latitude: 39.92
+    longitude: 116.41
+    # 发布版不依赖外网定位，避免离线环境启动变慢
+    use-ip-location: false
+    cache-seconds: 600
+  python:
+    base-url: http://127.0.0.1:8000
+  dro-refresh-ms: 300000
+  # DRO 轮询间隔：缓存为空时 15 秒后自动重试，Python 晚启动也能恢复
+  dro-poll-ms: 15000
+  safety:
+    # 发布版默认模拟；需要真实串口时改为 real 并配置 serial-port
+    mode: simulate
+    serial-port: COM5
+    serial-baud-rate: 4800
+    collect-interval-ms: 2000
+    register-start: 0
+    register-count: 2
+    identify-baud-rates: 4800,9600,19200,38400
+    identify-slave-addresses: 1,2,3,4
+    serial-read-timeout-ms: 400
+    frame-cache-ms: 500
+    watch-interval-ms: 3000
+    offline-threshold: 3
+    offline-recheck-ms: 10000
+
+logging:
+  level:
+    root: INFO
+    com.energy: INFO
+  file:
+    name: ./logs/energy-monitor.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7

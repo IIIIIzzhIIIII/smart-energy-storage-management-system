@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -79,6 +80,7 @@ public class DataSimulateService {
      * @param force 为 true 时强制重新生成（不校验是否已存在历史数据）
      * @return 生成的记录条数
      */
+    @Transactional
     public int generateHistory(int days, boolean force) {
         if (days <= 0) {
             return 0;

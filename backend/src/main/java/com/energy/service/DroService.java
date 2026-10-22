@@ -39,18 +39,25 @@ public class DroService {
     private volatile Map<String, Object> cache;
     private volatile String lastError;
     private volatile String updateTime;
+    private volatile long lastSuccessAt;
 
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * 定时拉取 DRO 计划并缓存（启动 5 秒后首次拉取）
+     * 轮询：缓存为空时每 pollMs 重试一次；已有缓存时按 refreshMs 刷新。
+     * 这样 Python 服务晚启动/临时不可用时，恢复后 15 秒内即可自动补上计划。
      */
-    @Scheduled(fixedDelayString = "${energy.dro-refresh-ms:300000}", initialDelayString = "1000")
+    @Scheduled(fixedDelayString = "${energy.dro-poll-ms:15000}", initialDelayString = "5000")
     public void refresh() {
+        long now = System.currentTimeMillis();
+        if (cache != null && now - lastSuccessAt < refreshMs) {
+            return;
+        }
         try {
             cache = fetchPlan();
             lastError = null;
             updateTime = LocalDateTime.now().format(TIME_FMT);
+            lastSuccessAt = System.currentTimeMillis();
             log.info("DRO 计划更新成功");
         } catch (Exception e) {
             lastError = e.getMessage();

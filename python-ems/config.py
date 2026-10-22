@@ -8,14 +8,20 @@
 该 .env 已被 .gitignore 忽略，切勿提交到仓库。
 """
 import os
+import sys
 
-# 加载本地 .env（不存在则忽略），用于注入天气 API Key 等敏感配置
+# 加载本地 .env（不存在则忽略），用于注入天气 API Key 等敏感配置。
+# 开发态：config.py 所在目录；冻结态：python-ems.exe 所在目录。
 try:
     from dotenv import load_dotenv
 
-    load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+    if getattr(sys, "frozen", False):
+        BASE_DIR = os.path.dirname(os.path.abspath(sys.executable))
+    else:
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    load_dotenv(os.path.join(BASE_DIR, ".env"))
 except ImportError:  # 未安装 python-dotenv 时退化为直接读取系统环境变量
-    pass
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ============ 数据源 ============
 # 可选值: "synthetic"（自造合成数据） / "csv"（公开数据集，快速切换）
@@ -23,6 +29,9 @@ DATA_SOURCE = "synthetic"
 
 # 当 DATA_SOURCE == "csv" 时，填写 CSV 路径及各列在原始文件中的列名
 CSV_PATH = "data/public_dataset.csv"
+# 冻结后工作目录可能变化，相对路径统一按 BASE_DIR 解析
+if not os.path.isabs(CSV_PATH):
+    CSV_PATH = os.path.join(BASE_DIR, CSV_PATH)
 CSV_COLUMNS = {
     "timestamp": "timestamp",       # 原始CSV中的时间列名
     "pv_power_kw": "pv",            # 光伏功率列名
